@@ -3,10 +3,11 @@ package hamaprs
 import "testing"
 
 func TestFile(t *testing.T) {
-	if DeviceForCallsign(&Packet{DestinationCallsign: "APU25N"}).Model != "UI-View32" {
+	p := &Packet{DestinationCallsign: "APU25N"}
+	if p.DeviceForCallsign().Model != "UI-View32" {
 		t.Error("Should be UI-View32")
 	}
-	if DeviceForCallsign(&Packet{DestinationCallsign: "APU25N"}).Model != "UI-View32" {
+	if p.DeviceForCallsign().Model != "UI-View32" {
 		t.Error("Should be UI-View32")
 	}
 	/* browse the  Tries */
@@ -166,20 +167,20 @@ func TestTrieSortedWildcard(t *testing.T) {
 func TestMice(t *testing.T) {
 	parser := NewParser()
 	msg, _ := parser.ParsePacket("JE6EET-9>S3SWY6,WIDE1-1,qAS,JH6ETS-10:`;\\ll} >/`\"3{}CM now GIGA No...5_$", false)
-	if DeviceForCallsign(msg).Model != "FT1D" {
+	if msg.DeviceForCallsign().Model != "FT1D" {
 		t.Error("Should be FT1D")
 	}
 	msg, _ = parser.ParsePacket("AF7PZ-7>TWSXYW,ERINB,WIDE1*,WIDE2-1,qAo,K7FZO:`2LHp@3[/`\"4(}_$", false)
-	if DeviceForCallsign(msg).Model != "FT1D" {
+	if msg.DeviceForCallsign().Model != "FT1D" {
 		t.Error("Should be FT1D")
 	}
 	msg, _ = parser.ParsePacket("JE4MKV-9>S4SSY8,JM4WDK-2*,qAR,JA4YMC-10:`=D[m\\Tv\\`\"3z}_$", false)
-	if DeviceForCallsign(msg).Model != "FT1D" {
+	if msg.DeviceForCallsign().Model != "FT1D" {
 		t.Error("Should be FT1D")
 	}
 
 	msg, _ = parser.ParsePacket("VK7QF-9>T2U1P4,WIDE1-1,WIDE2-1,qAR,VK7ZRO-2:`K1qm y>/'\"4/}|!$&<'V|!w4&!|3", false)
-	if DeviceForCallsign(msg).Model != "TinyTrak3" {
+	if msg.DeviceForCallsign().Model != "TinyTrak3" {
 		t.Error("Should be TinyTrak")
 	}
 

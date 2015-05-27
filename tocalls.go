@@ -179,28 +179,3 @@ func isNumeric(r rune) bool {
 	}
 	return false
 }
-
-// DeviceForCallsign return
-func DeviceForCallsign(p *Packet) *Device {
-
-	// 1st test exact match
-	if toCall, ok := toCalls[p.DestinationCallsign]; ok {
-		return &toCall
-	}
-
-	// then look in the trie
-	if d := trieRoot.match(p.DestinationCallsign); d != nil {
-		return d
-	}
-
-	// then search for mices we need a least '_$ or '..._$
-	if len(p.Comment) >= 3 {
-		// last two chars
-		ls := p.Comment[len(p.Comment)-2:]
-		if toCall, ok := toCalls[ls]; ok {
-			return &toCall
-		}
-	}
-	return nil
-
-}

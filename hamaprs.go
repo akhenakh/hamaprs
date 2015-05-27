@@ -219,6 +219,30 @@ func (p *Packet) IncludePosition() bool {
 	return false
 }
 
+// DeviceForCallsign return the Device describing the transceiver used to send this packet
+func (p *Packet) DeviceForCallsign() *Device {
+
+	// 1st test exact match
+	if toCall, ok := toCalls[p.DestinationCallsign]; ok {
+		return &toCall
+	}
+
+	// then look in the trie
+	if d := trieRoot.match(p.DestinationCallsign); d != nil {
+		return d
+	}
+
+	// then search for mices we need a least '_$ or '..._$
+	if len(p.Comment) >= 3 {
+		// last two chars
+		ls := p.Comment[len(p.Comment)-2:]
+		if toCall, ok := toCalls[ls]; ok {
+			return &toCall
+		}
+	}
+	return nil
+}
+
 // return a short version of the callsign as KK6NXK for KK6NXK-7
 func ShortCallsign(c string) string {
 	s := strings.Split(c, "-")
