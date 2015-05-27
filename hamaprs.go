@@ -41,6 +41,7 @@ const (
 	InvalidPacketType
 )
 
+// InvalidCoordinate is a marker for an unset position
 const InvalidCoordinate float64 = 360
 
 // Packet describes an APRS packet
@@ -58,6 +59,7 @@ type Packet struct {
 	Speed               float64
 	Course              uint8
 	Weather             *WeatherReport
+	Telemetry           *Telemetry
 	RawMessage          string
 	MicE                string
 	Message             string
@@ -183,6 +185,17 @@ func (p *Parser) FillAprsPacket(raw string, isAX25 bool, packet *Packet) (*Packe
 			Pressure:          parseNilableFloat(cpacket.wx_report.pressure),
 		}
 		packet.Weather = &w
+	}
+
+	if cpacket.telemetry != nil {
+		t := Telemetry{
+			Val1: parseNilableFloat(cpacket.telemetry.val1),
+			Val2: parseNilableFloat(cpacket.telemetry.val2),
+			Val3: parseNilableFloat(cpacket.telemetry.val3),
+			Val4: parseNilableFloat(cpacket.telemetry.val4),
+			Val5: parseNilableFloat(cpacket.telemetry.val5),
+		}
+		packet.Telemetry = &t
 	}
 
 	// MicE alloc a buffer of 20 bytes for fap_mice_mbits_to_message C func
