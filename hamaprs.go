@@ -219,8 +219,8 @@ func (p *Packet) IncludePosition() bool {
 	return false
 }
 
-// DeviceForCallsign return the Device describing the transceiver used to send this packet
-func (p *Packet) DeviceForCallsign() *Device {
+// Device return the Device describing the transceiver used to send this packet
+func (p *Packet) Device() *Device {
 
 	// 1st test exact match
 	if toCall, ok := toCalls[p.DestinationCallsign]; ok {

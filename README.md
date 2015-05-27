@@ -22,7 +22,7 @@ packet, _ = parser.parsePacket("KK6NXK-7>T2U1P4,WIDE1-1,WIDE2-1,qAR,VK7ZRO-2:`K1
 Get the model transceiver used to send a packet.
 ```
 packet, _ := parser.ParsePacket("KK6NXK-7>S3SWY6,WIDE1-1,qAS,JH6ETS-10:`;\\ll} >/`\"3{}CM now GIGA No...5_$", false)
-d := packet.DeviceForCallsign()
+d := packet.Device()
 fmt.Prinln(d.Model)
 ```
 Returns FT1D  
