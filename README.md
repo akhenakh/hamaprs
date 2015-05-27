@@ -25,3 +25,8 @@ Get the model transceiver used to send a packet.
 packet, _ := parser.ParsePacket("KK6NXK-7>S3SWY6,WIDE1-1,qAS,JH6ETS-10:`;\\ll} >/`\"3{}CM now GIGA No...5_$", false)
 fmt.Println(DeviceForCallsign(packet).Model)
 ```
+
+Thanks
+======
+[APRS identification data](https://github.com/hessu/aprs-deviceid/)  
+Scott Kidder [aprs-dashboard](https://github.com/urlgrey/aprs-dashboard)  

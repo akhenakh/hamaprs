@@ -15,6 +15,7 @@ fap_packet_type_t getPacketType(fap_packet_t* p) {
 import "C"
 import (
 	"errors"
+	"reflect"
 	"runtime"
 	"strings"
 	"time"
@@ -48,6 +49,7 @@ type Packet struct {
 	Timestamp           int
 	SourceCallsign      string
 	DestinationCallsign string
+	Path                []string
 	Status              string
 	Symbol              string
 	Latitude            float64
@@ -124,6 +126,20 @@ func (p *Parser) FillAprsPacket(raw string, isAX25 bool, packet *Packet) (*Packe
 	packet.Comment = C.GoStringN(cpacket.comment, C.int(cpacket.comment_len))
 	packet.RawMessage = raw
 
+	if C.int(cpacket.path_len) > 0 {
+		var CPath **C.char = cpacket.path
+		length := int(cpacket.path_len)
+		hdr := reflect.SliceHeader{
+			Data: uintptr(unsafe.Pointer(CPath)),
+			Len:  length,
+			Cap:  length,
+		}
+		ptrSlice := *(*[]*C.char)(unsafe.Pointer(&hdr))
+		packet.Path = make([]string, int(cpacket.path_len))
+		for i, v := range ptrSlice {
+			packet.Path[i] = C.GoString(v)
+		}
+	}
 	switch C.getPacketType(cpacket) {
 	case C.fapLOCATION:
 		packet.PacketType = LocationPacketType

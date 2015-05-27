@@ -24,4 +24,8 @@ func TestParse(t *testing.T) {
 		t.Error("should be in service is", msg.MicE)
 	}
 
+	msg, _ = parser.ParsePacket("DG1ABE-9>APOTC1,WIDE1-1,WIDE2-2,qAR,DG1ABE-10:/271651z5140.78N\\00938.27EP101/000!W01!/A=000660 12.2V 21C  Parken,Michael DOK H34/Uslar 145,575/439,100Mhz", false)
+	if len(msg.Path) != 4 {
+		t.Error("path should be 4 is", len(msg.Path))
+	}
 }
