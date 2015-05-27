@@ -99,10 +99,10 @@ func NewParser() *Parser {
 // ParsePacket parse raw packet string and return a new Packet
 func (p *Parser) ParsePacket(raw string, isAX25 bool) (*Packet, error) {
 	packet := &Packet{Latitude: InvalidCoordinate, Longitude: InvalidCoordinate}
-	return p.FillAprsPacket(raw, isAX25, packet)
+	return p.FillPacket(raw, isAX25, packet)
 }
 
-func (p *Parser) FillAprsPacket(raw string, isAX25 bool, packet *Packet) (*Packet, error) {
+func (p *Parser) FillPacket(raw string, isAX25 bool, packet *Packet) (*Packet, error) {
 	message_cstring := C.CString(raw)
 	message_length := C.uint(len(raw))
 	defer C.free(unsafe.Pointer(message_cstring))
