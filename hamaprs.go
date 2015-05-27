@@ -142,6 +142,7 @@ func (p *Parser) FillAprsPacket(raw string, isAX25 bool, packet *Packet) (*Packe
 			packet.Path[i] = C.GoString(v)
 		}
 	}
+
 	switch C.getPacketType(cpacket) {
 	case C.fapLOCATION:
 		packet.PacketType = LocationPacketType
