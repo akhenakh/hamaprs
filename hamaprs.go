@@ -60,7 +60,7 @@ type Packet struct {
 	Course              uint8
 	Weather             *WeatherReport
 	Telemetry           *Telemetry
-	RawMessage          string
+	RawPacket           string
 	MicE                string
 	Message             string
 	Comment             string
@@ -104,11 +104,11 @@ func (p *Parser) ParsePacket(raw string, isAX25 bool) (*Packet, error) {
 }
 
 func (p *Parser) FillPacket(raw string, isAX25 bool, packet *Packet) (*Packet, error) {
-	message_cstring := C.CString(raw)
-	message_length := C.uint(len(raw))
-	defer C.free(unsafe.Pointer(message_cstring))
+	packet_cstring := C.CString(raw)
+	packet_clength := C.uint(len(raw))
+	defer C.free(unsafe.Pointer(packet_cstring))
 
-	cpacket := C.fap_parseaprs(message_cstring, message_length, C.short(boolToInt(isAX25)))
+	cpacket := C.fap_parseaprs(packet_cstring, packet_clength, C.short(boolToInt(isAX25)))
 
 	defer C.fap_free(cpacket)
 
@@ -117,7 +117,7 @@ func (p *Parser) FillPacket(raw string, isAX25 bool, packet *Packet) (*Packet, e
 		defer C.free(unsafe.Pointer(ebuffer))
 
 		C.fap_explain_error(*cpacket.error_code, ebuffer)
-		return &Packet{RawMessage: raw}, errors.New(C.GoString(ebuffer))
+		return &Packet{RawPacket: raw}, errors.New(C.GoString(ebuffer))
 	}
 
 	packet.Timestamp = int(time.Now().Unix())
@@ -131,7 +131,7 @@ func (p *Parser) FillPacket(raw string, isAX25 bool, packet *Packet) (*Packet, e
 	packet.Message = C.GoString(cpacket.message)
 	packet.Status = C.GoStringN(cpacket.status, C.int(cpacket.status_len))
 	packet.Comment = C.GoStringN(cpacket.comment, C.int(cpacket.comment_len))
-	packet.RawMessage = raw
+	packet.RawPacket = raw
 
 	if C.int(cpacket.path_len) > 0 {
 		var CPath **C.char = cpacket.path
