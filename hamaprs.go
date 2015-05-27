@@ -97,6 +97,7 @@ func NewParser() *Parser {
 }
 
 // ParsePacket parse raw packet string and return a new Packet
+// if an error occurs it will return a packet with fill RawMessage only
 func (p *Parser) ParsePacket(raw string, isAX25 bool) (*Packet, error) {
 	packet := &Packet{Latitude: InvalidCoordinate, Longitude: InvalidCoordinate}
 	return p.FillPacket(raw, isAX25, packet)
@@ -112,7 +113,11 @@ func (p *Parser) FillPacket(raw string, isAX25 bool, packet *Packet) (*Packet, e
 	defer C.fap_free(cpacket)
 
 	if cpacket.error_code != nil {
-		return nil, errors.New("Unable to parse APRS message")
+		ebuffer := (*C.char)(C.malloc(C.size_t(60)))
+		defer C.free(unsafe.Pointer(ebuffer))
+
+		C.fap_explain_error(*cpacket.error_code, ebuffer)
+		return &Packet{RawMessage: raw}, errors.New(C.GoString(ebuffer))
 	}
 
 	packet.Timestamp = int(time.Now().Unix())
@@ -213,10 +218,10 @@ func (p *Parser) FillPacket(raw string, isAX25 bool, packet *Packet) (*Packet, e
 
 // IncludePosition return true if the packet contains a Position
 func (p *Packet) IncludePosition() bool {
-	if p.Latitude != InvalidCoordinate && p.Longitude != InvalidCoordinate {
-		return true
+	if p.Latitude == InvalidCoordinate || p.Longitude == InvalidCoordinate {
+		return false
 	}
-	return false
+	return true
 }
 
 // Device return the Device describing the transceiver used to send this packet
