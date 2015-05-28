@@ -1,3 +1,5 @@
+[![wercker status](https://app.wercker.com/status/9933c8d565b8d1cdfe7c9f9ebf0d07d8/m "wercker status")](https://app.wercker.com/project/bykey/9933c8d565b8d1cdfe7c9f9ebf0d07d8)
+
 hamAPRS
 =======
 
