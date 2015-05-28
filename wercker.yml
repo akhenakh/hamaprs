@@ -1,1 +1,41 @@
-box: wercker/golang
+box: golang
+dev:
+  steps:
+    - script:
+      name: apt-get
+      code: |
+        wget http://www.pakettiradio.net/downloads/libfap/1.5/libfap6_1.5_amd64.deb 
+        wget http://www.pakettiradio.net/downloads/libfap/1.5/libfap-dev_1.5_amd64.deb 
+        dpkg -i libfap6_1.5_amd64.deb libfap-dev_1.5_amd64.deb  
+        rm libfap-dev_1.5_amd64.deb libfap6_1.5_amd64.deb 
+
+    - internal/watch:
+        code: |
+          go build ./...
+        reload: true
+
+# Build definition
+build:
+  # The steps that will be executed on build
+  steps:
+    - script:
+      name: apt-get
+      code: |
+        wget http://www.pakettiradio.net/downloads/libfap/1.5/libfap6_1.5_amd64.deb 
+        wget http://www.pakettiradio.net/downloads/libfap/1.5/libfap-dev_1.5_amd64.deb 
+        dpkg -i libfap6_1.5_amd64.deb libfap-dev_1.5_amd64.deb  
+        rm libfap-dev_1.5_amd64.deb libfap6_1.5_amd64.deb 
+
+    # golint step!
+    - wercker/golint
+
+    # Build the project
+    - script:
+        name: go build
+        code: |
+          go build ./...
+    # Test the project
+    - script:
+        name: go test
+        code: |
+          go test ./...
