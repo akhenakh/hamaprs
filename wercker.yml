@@ -1,11 +1,11 @@
-box: golang
+box: google/golang
 dev:
   steps:
     - script:
       name: apt-get
       code: |
-        wget http://www.pakettiradio.net/downloads/libfap/1.5/libfap6_1.5_amd64.deb 
-        wget http://www.pakettiradio.net/downloads/libfap/1.5/libfap-dev_1.5_amd64.deb 
+        curl http://www.pakettiradio.net/downloads/libfap/1.5/libfap6_1.5_amd64.deb -o libfap6_1.5_amd64.deb
+        curl http://www.pakettiradio.net/downloads/libfap/1.5/libfap-dev_1.5_amd64.deb -o libfap-dev_1.5_amd64.deb 
         dpkg -i libfap6_1.5_amd64.deb libfap-dev_1.5_amd64.deb  
         rm libfap-dev_1.5_amd64.deb libfap6_1.5_amd64.deb 
 
@@ -21,8 +21,8 @@ build:
     - script:
       name: apt-get
       code: |
-        wget http://www.pakettiradio.net/downloads/libfap/1.5/libfap6_1.5_amd64.deb 
-        wget http://www.pakettiradio.net/downloads/libfap/1.5/libfap-dev_1.5_amd64.deb 
+        curl http://www.pakettiradio.net/downloads/libfap/1.5/libfap6_1.5_amd64.deb -o libfap6_1.5_amd64.deb
+        curl http://www.pakettiradio.net/downloads/libfap/1.5/libfap-dev_1.5_amd64.deb -o libfap-dev_1.5_amd64.deb 
         dpkg -i libfap6_1.5_amd64.deb libfap-dev_1.5_amd64.deb  
         rm libfap-dev_1.5_amd64.deb libfap6_1.5_amd64.deb 
 
@@ -34,6 +34,7 @@ build:
         name: go build
         code: |
           go build ./...
+
     # Test the project
     - script:
         name: go test
