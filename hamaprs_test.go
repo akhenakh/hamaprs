@@ -64,3 +64,19 @@ func TestParse(t *testing.T) {
 	}
 
 }
+
+func TestWeather(t *testing.T) {
+	parser := NewParser()
+	raw := "CYQB>APRS,TCPIP*,qAS,KK5WM-2:@221500z4648.00N/07123.00W_000/000g...t071h73b10210 Canada_Quebec, Que"
+	msg, err := parser.ParsePacket(raw, false)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
+	if msg.Weather == nil {
+		t.Fatal("should find a weather report here")
+	}
+	if int(msg.Weather.Temperature) != 21 {
+		t.Fatal("should find a temperature report here")
+	}
+}
