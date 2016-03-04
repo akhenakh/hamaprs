@@ -238,13 +238,21 @@ func (p *Packet) Device() *Device {
 	}
 
 	// then search for mices we need a least '_$ or '..._$
-	if len(p.Comment) >= 3 {
+	if len(p.Comment) >= 2 {
 		// last two chars
 		ls := p.Comment[len(p.Comment)-2:]
 		if toCall, ok := toCalls[ls]; ok {
 			return &toCall
 		}
 	}
+
+	// then search for Mice legacy
+	for _, d := range miceLegacy {
+		if d.MiceLegacyMatch(p) {
+			return &d
+		}
+	}
+
 	return nil
 }
 

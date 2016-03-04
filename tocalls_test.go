@@ -179,9 +179,28 @@ func TestMice(t *testing.T) {
 		t.Error("Should be FT1D")
 	}
 
+	msg, _ = parser.ParsePacket("JO7XUF-7>SYSYU7,WIDE1-1,qAR,JE7ZBU-10:`Ea;l4;[/`\"5,}_$", false)
+	if msg.Device().Model != "FT1D" {
+		t.Error("Should be FT1D")
+	}
+
 	msg, _ = parser.ParsePacket("VK7QF-9>T2U1P4,WIDE1-1,WIDE2-1,qAR,VK7ZRO-2:`K1qm y>/'\"4/}|!$&<'V|!w4&!|3", false)
 	if msg.Device().Model != "TinyTrak3" {
 		t.Error("Should be TinyTrak")
+	}
+
+}
+
+func TestMiceLegacy(t *testing.T) {
+	parser := NewParser()
+	msg, _ := parser.ParsePacket("JK3SPC-9>STTPQ4,WIDE1-1,WIDE2-1,qAR,JO3HYR-10:`?9gl!1>/]\"2@}TM-D710 WlRES#6469D=", false)
+	if msg.Device().Model != "TM-D710" {
+		t.Error("TM-D710")
+	}
+
+	msg, _ = parser.ParsePacket("SP1WSR-9>US2U64,SR1NWE*,WIDE2-2,qAR,SR1WXN:`*:bl}Wv/>\"42}Andy:TH-D7A 5W GP1/4", false)
+	if msg.Device().Model != "TH-D7A" {
+		t.Error("TH-D7A")
 	}
 
 }
