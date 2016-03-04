@@ -22,6 +22,7 @@ import (
 	"unsafe"
 )
 
+// PacketType defines the packets type from libfap
 type PacketType int
 
 const (
@@ -86,7 +87,7 @@ type Telemetry struct {
 // Parser is an APRS Parser
 type Parser struct{}
 
-// Returns a new APRS Parser
+// NewParser returns a new APRS Parser
 func NewParser() *Parser {
 	C.fap_init()
 	p := &Parser{}
@@ -103,12 +104,13 @@ func (p *Parser) ParsePacket(raw string, isAX25 bool) (*Packet, error) {
 	return p.FillPacket(raw, isAX25, packet)
 }
 
+// FillPacket fille an existing packet with the decoded raw APRS message
 func (p *Parser) FillPacket(raw string, isAX25 bool, packet *Packet) (*Packet, error) {
-	packet_cstring := C.CString(raw)
-	packet_clength := C.uint(len(raw))
-	defer C.free(unsafe.Pointer(packet_cstring))
+	packetCstring := C.CString(raw)
+	packetClength := C.uint(len(raw))
+	defer C.free(unsafe.Pointer(packetCstring))
 
-	cpacket := C.fap_parseaprs(packet_cstring, packet_clength, C.short(boolToInt(isAX25)))
+	cpacket := C.fap_parseaprs(packetCstring, packetClength, C.short(boolToInt(isAX25)))
 
 	defer C.fap_free(cpacket)
 
@@ -134,7 +136,7 @@ func (p *Parser) FillPacket(raw string, isAX25 bool, packet *Packet) (*Packet, e
 	packet.RawPacket = raw
 
 	if C.int(cpacket.path_len) > 0 {
-		var CPath **C.char = cpacket.path
+		CPath := cpacket.path
 		length := int(cpacket.path_len)
 		hdr := reflect.SliceHeader{
 			Data: uintptr(unsafe.Pointer(CPath)),
@@ -256,7 +258,7 @@ func (p *Packet) Device() *Device {
 	return nil
 }
 
-// return a short version of the callsign as KK6NXK for KK6NXK-7
+// ShortCallsign returns a short version of the callsign as KK6NXK for KK6NXK-7
 func ShortCallsign(c string) string {
 	s := strings.Split(c, "-")
 	return s[0]

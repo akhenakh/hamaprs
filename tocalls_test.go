@@ -195,12 +195,12 @@ func TestMiceLegacy(t *testing.T) {
 	parser := NewParser()
 	msg, _ := parser.ParsePacket("JK3SPC-9>STTPQ4,WIDE1-1,WIDE2-1,qAR,JO3HYR-10:`?9gl!1>/]\"2@}TM-D710 WlRES#6469D=", false)
 	if msg.Device().Model != "TM-D710" {
-		t.Error("TM-D710")
+		t.Error("shoud be TM-D710 got", msg.Device().Model)
 	}
 
 	msg, _ = parser.ParsePacket("SP1WSR-9>US2U64,SR1NWE*,WIDE2-2,qAR,SR1WXN:`*:bl}Wv/>\"42}Andy:TH-D7A 5W GP1/4", false)
 	if msg.Device().Model != "TH-D7A" {
-		t.Error("TH-D7A")
+		t.Error("shoud be TH-D7A got", msg.Device().Model)
 	}
 
 }
